@@ -9,21 +9,40 @@ function updateGameArea() {
     context.clearRect(0, 0, canvas.clientWidth, canvas.clientHeight);
     player1.newPosition();
     player2.newPosition();
-    if((collisionWith(player1, player2))) {cancelAnimationFrame(requestID)};
+    createMap();
+
+    function gameOver() {
+      return cancelAnimationFrame(requestID);
+    }
+    if ((collisionWith(player1, player2))) {gameOver()};
+
+    // if ((collisionWith(player1, player2))) {cancelAnimationFrame(requestID)};
 }
 
 updateGameArea();
 
 
+
+// Check if two circles are colliding
+
 function collisionWith(player, ghost) {
-    // Check if two circles are colliding
-        if(Math.hypot(
-            ghost.x - player.x,
-            ghost.y - player.y
-        ) < ghost.radius + player.radius) {
-            console.log('colliding');
-            return true;
-        }
+  if(Math.hypot(
+      ghost.x - player.x,
+      ghost.y - player.y
+  ) < ghost.radius + player.radius) {
+      console.log('colliding');
+      return true;
+  }
+}
+
+// Checks if a circle and a rectangle are colliding
+
+function mapCollisions({circle, rectangle}) {
+  return (
+      circle.y - circle.radius + circle.speedY <= rectangle.y + rectangle.height && 
+      circle.x + circle.radius + circle.speedX >= rectangle.x && 
+      circle.y + circle.radius + circle.speedY >= rectangle.y && 
+      circle.x - circle.radius + circle.speedX <= rectangle.x + rectangle.width)
 }
 
 // Players movements 
@@ -32,7 +51,7 @@ document.addEventListener("keydown", (event) => {
   console.log("I am working");
   switch (event.key) {
     case "ArrowUp":
-     player1.speedY -= 1;
+      player1.speedY -= 1;
       break;
     case "ArrowDown":
       player1.speedY += 1;

@@ -1,7 +1,7 @@
 const canvas = document.querySelector("canvas");
 const context = canvas.getContext("2d");
 const getScore = document.getElementById("score");
-
+const getHp = document.getElementById("hp");
 
 // Player and ghost
 
@@ -68,7 +68,7 @@ const ghosts = [
 // HP and Score
 
 let scoreCounter = 0;
-let numberOfLifes = 3;
+let hp = 3;
 
 // Keyboard keys for player movement
 
@@ -98,6 +98,12 @@ function updateGameArea() {
   ghosts.forEach(ghost => {
     ghost.draw();
     ghost.newPosition();
+
+    if (collisionWith(ghost, player)) {
+      cancelAnimationFrame(requestID)
+      hp = hp - 1;
+      getHp.innerHTML = `${hp}`;
+    }
 
     barriers.forEach((barrier) => { 
       barrier.draw()
@@ -146,15 +152,20 @@ function updateGameArea() {
 
 updateGameArea();
 
+
 // Animate player movement
 function playerMovement() {
   if (keys.ArrowUp.pressed && prevKey === 'ArrowUp') {
+    player.rotation = 1.5 * Math.PI;
     player.speed.y = -1;
   } else if (keys.ArrowDown.pressed && prevKey === 'ArrowDown') {
+    player.rotation = Math.PI / 2;
     player.speed.y = 1;
   } else if (keys.ArrowLeft.pressed && prevKey === 'ArrowLeft') {
+    player.rotation = Math.PI;
     player.speed.x = -1;
   } else if (keys.ArrowRight.pressed && prevKey === 'ArrowRight') {
+    player.rotation = 0;
     player.speed.x = 1;
   }
 }

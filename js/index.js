@@ -1,82 +1,119 @@
 const canvas = document.querySelector("canvas");
 const context = canvas.getContext("2d");
-const player1 = new Pacman(50, 50, 25, 25);
-const player2 = new Ghost(150, 150, 50, 50);
+const getScore = document.getElementById("score");
+const player = new Pacman((25 + (25 / 2)), (25 + (25 / 2)), 25, 25);
 
+const ghosts = [
+  {
+    clyde: new Ghosts((25 + (25 / 2)), (25 + (25 / 2))),
+    blinky: new Ghosts((25 + (25 / 2)), (25 + (25 / 2))),
+    pinky: new Ghosts((25 + (25 / 2)), (25 + (25 / 2))),
+    inky: new Ghosts((25 + (25 / 2)), (25 + (25 / 2))),
+  }
+]
+
+let collision = false;
+let scoreCounter = 0;
+let numberOfLifes = 3;
 
 function updateGameArea() {
-    const requestID = requestAnimationFrame(updateGameArea);
-    context.clearRect(0, 0, canvas.clientWidth, canvas.clientHeight);
-    player1.newPosition();
-    player2.newPosition();
-    createMap();
+  context.clearRect(0, 0, canvas.clientWidth, canvas.clientHeight);
+  player.newPosition();
+  const requestID = requestAnimationFrame(updateGameArea);
 
-    function gameOver() {
-      return cancelAnimationFrame(requestID);
+  barriers.forEach((barrier) => { 
+    barrier.draw()
+})
+  scores.forEach((whiteDot, counter) => {   
+    whiteDot.draw()  
+    if (collisionWith(player, whiteDot)) {
+      scoreCounter++;
+      scores.splice(counter, 1);
+      if(scores.length === 0) {
+        getScore.innerHTML = 'You win! Game Over!';
+        cancelAnimationFrame(requestID);
+      } else {
+        getScore.innerHTML = `${scoreCounter - 1}`;
+      }
     }
-    if ((collisionWith(player1, player2))) {gameOver()};
-
-    // if ((collisionWith(player1, player2))) {cancelAnimationFrame(requestID)};
+  })
 }
 
 updateGameArea();
 
-
+// function drawObjects() {
+//   obstacles.forEach((obstacle) => {
+//     obstacle.draw();
+//     obstacle.y *= 1;
+//     if(!handleCollision(obstacle)) {
+//       obstacle.y = 1;
+//     }
+//   });
+// }
 
 // Check if two circles are colliding
-
 function collisionWith(player, ghost) {
-  if(Math.hypot(
-      ghost.x - player.x,
-      ghost.y - player.y
-  ) < ghost.radius + player.radius) {
-      console.log('colliding');
-      return true;
+  if (
+    Math.hypot(ghost.x - player.x, ghost.y - player.y) <
+    ghost.radius + player.radius
+  ) {
+    return true;
   }
 }
 
 // Checks if a circle and a rectangle are colliding
-
-function mapCollisions({circle, rectangle}) {
+function detectCollision(barrier, player) {
   return (
-      circle.y - circle.radius + circle.speedY <= rectangle.y + rectangle.height && 
-      circle.x + circle.radius + circle.speedX >= rectangle.x && 
-      circle.y + circle.radius + circle.speedY >= rectangle.y && 
-      circle.x - circle.radius + circle.speedX <= rectangle.x + rectangle.width)
+    player.y - player.radius + player.speedY <= barrier.y + barrier.height &&
+    player.x + player.radius + player.speedX >= barrier.x &&
+    player.y + player.radius + player.speedY >= barrier.y &&
+    player.x - player.radius + player.speedX <= barrier.x + barrier.width
+  );
 }
 
-// Players movements 
+function handleCollision(player) {
+  collision = barriers.some((barrier) => {
+    return detectCollision(barrier, player);
+  });
+  return collision;
+}
 
 document.addEventListener("keydown", (event) => {
-  console.log("I am working");
+  // console.log("I am working");
+  let tempPlayer;
+  let tempPlayer2;
   switch (event.key) {
     case "ArrowUp":
-      player1.speedY -= 1;
+      tempPlayer = { ...player };
+      tempPlayer.y -= 5;
+      if (!handleCollision(tempPlayer)) {
+        player.y -= 5;
+      }
+
       break;
     case "ArrowDown":
-      player1.speedY += 1;
+      tempPlayer = { ...player };
+      tempPlayer.y += 5;
+      if (!handleCollision(tempPlayer)) {
+        player.y += 5;
+      }
+
       break;
     case "ArrowLeft":
-      player1.speedX -= 1;
+      tempPlayer = { ...player };
+      tempPlayer.x -= 5;
+      if (!handleCollision(tempPlayer)) {
+        player.x -= 5;
+      }
+
       break;
     case "ArrowRight":
-      player1.speedX += 1;
+      tempPlayer = { ...player };
+      tempPlayer.x += 5;
+      if (!handleCollision(tempPlayer)) {
+        player.x += 5;
+      }
+
       break;
-    case "W":
-    case "w":
-        player2.speedY -= 1;
-        break;
-    case "A":
-    case "a":
-        player2.speedX -= 1;
-        break;
-    case "S":
-    case "s":
-        player2.speedY += 1;
-        break;
-    case "D":
-    case "d":
-        player2.speedX += 1;
-        break;
   }
 });

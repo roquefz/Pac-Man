@@ -50,11 +50,14 @@ function createMap() {
         row.forEach((number, j) => {
             switch (number) { 
                 case 0:
-                    scores.push(
-                        new Score(
-                            (j * 25 + (25 / 2)), (i * 25 + (25 / 2))
-                        )
-                    )
+                    scores.push(new Score (
+                        {
+                            position: {
+                                x: (j * 25 + (25 / 2)),
+                                y: (i * 25 + (25 / 2))
+                            }
+                        }
+                    ))
                     break
                 case 1:
                     barriers.push(
@@ -166,5 +169,4 @@ function createMap() {
     });
 
 }
-
 createMap();

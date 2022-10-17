@@ -1,58 +1,61 @@
 class Pacman {
-  constructor(x, y, width, height) {
-    this.x = x;
-    this.y = y;
-    this.speedX = 0;
-    this.speedY = 0;
+  constructor({position, speed}) {
+    this.position = position;
+    this.speed = speed;
     this.radius = 9;
-    this.width = width;
-    this.height = height;
   }
 
   draw() {
     context.beginPath();
-    context.arc(this.x, this.y, this.radius, 0 , Math.PI * 2);
+    context.arc(this.position.x, this.position.y, this.radius, 0 , Math.PI * 2);
     context.fillStyle = "yellow";
     context.fill();
     context.closePath(); 
   }
 
   newPosition() {
-    this.draw();
-    this.x += this.speedX;
-    this.y += this.speedY;
+    this.draw()
+    this.position.x += this.speed.x;
+    this.position.y += this.speed.y;
   }
 }
 
-class Ghosts extends Pacman {
-    constructor(x, y) {
-      super(x, y);
+class Ghosts {
+    constructor({
+      position,
+      speed,
+      color,
+      image,
+    }) {
+      this.position = position;
+      this.speed = speed;
       this.radius = 9;
+      this.color = color;
+      this.prevCollisions = [];
     }
 
     draw() {
       context.beginPath();
-      context.arc(this.x, this.y, this.radius, 0, 2 * Math.PI);
-      context.fillStyle = "red";
+      context.arc(this.position.x, this.position.y, this.radius, 0, 2 * Math.PI);
+      context.fillStyle = this.color;
       context.fill();
       context.closePath(); 
     }
 
     newPosition() {
-        this.x += this.speedX;
-        this.y += this.speedY;
+        this.position.x += this.speed.x;
+        this.position.y += this.speed.y;
     }
 }
 
 class Score {
-  constructor(x, y) {
-    this.x = x;
-    this.y = y;
+  constructor({position}) {
+    this.position = position;
     this.radius = 3;
   }
   draw() {
     context.beginPath();
-    context.arc(this.x, this.y, this.radius, 0, 2 * Math.PI);
+    context.arc(this.position.x, this.position.y, this.radius, 0 , Math.PI * 2);
     context.fillStyle = "white";
     context.fill();
     context.closePath(); 

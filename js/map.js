@@ -12,14 +12,29 @@ class Borders {
     }
 }
 
+class PowerUp {
+    constructor({position}) {
+        this.position = position;
+        this.radius = 7;
+      }
+      draw() {
+        context.beginPath();
+        context.arc(this.position.x, this.position.y, this.radius, 0 , Math.PI * 2);
+        context.fillStyle = "white";
+        context.fill();
+        context.closePath(); 
+      }
+}
+
 const barriers = [];
 const scores = [];
+const powerUps = [];
 
 function createMap() {
     // 10x11
     let fullMap = [
         [2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 10, 1, 1, 1, 1, 1, 1, 1, 1, 3],
-        [6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 6],
+        [6, , 0, 0, 0, 0, 0, 0, 0, 22, 6, 0, 0, 0, 0, 0, 0, 0, 0, 6],
         [6, 0, 7, 1, 8, 0, 7, 1, 8, 0, 11, 0, 7, 1, 8, 0, 7, 8, 0, 6],
         [6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6],
         [6, 0, 7, 1, 8, 0, 12, 0, 7, 1, 10, 1, 8, 0, 12, 0, 7, 8, 0, 6],
@@ -65,6 +80,16 @@ function createMap() {
                             25 * j, 25 * i, getImage('./img/map/pipeHorizontal.png')
                         )
                     )
+                break 
+                case 22:
+                powerUps.push(
+                    new PowerUp({
+                        position: {
+                            x: (j * 25 + (25 / 2)),
+                            y: (i * 25 + (25 / 2))
+                        }
+                    })
+                )
                 break 
                 case 2:
                 barriers.push(

@@ -16,6 +16,16 @@ const player = new Pacman( {
   }
  });
 
+const player2 = new Player2( {
+  position: {
+    x: (250 + (25 / 2)),
+    y: (250 + (25 / 2))
+  },
+  speed: {
+    x: 0,
+    y: 0
+  }
+ });
 
 const ghosts = [ 
   new Ghosts({
@@ -88,6 +98,8 @@ const keys = {
 }
 let prevKey = '';
 
+let powerUp = true || false;
+
 function updateGameArea() {
   context.clearRect(0, 0, canvas.clientWidth, canvas.clientHeight);
   player.newPosition();
@@ -99,11 +111,17 @@ function updateGameArea() {
     ghost.newPosition();
 
     if (collisionWith(ghost, player)) {
+      powerUp = false;
       death.play();
       cancelAnimationFrame(requestID)
       hp = hp - 1;
       getHp.innerHTML = `HP: ${hp}`;
+    } else if (collisionWith(ghost, player)) {
+      powerUp = true;
+      scoreCounter + 200;
+      
     }
+
 
     barriers.forEach((barrier) => { 
       barrier.draw()
@@ -135,6 +153,21 @@ function updateGameArea() {
       player.speed.y = 0
     }
   })
+
+  powerUps.forEach((powerUp) => {
+    powerUp.draw()
+    if (collisionWith(player, powerUp)) {
+      powerUp = true;
+      powerUps.splice
+      /*scoreCounter++;
+    scores.splice(counter, 200);*/}
+    else {
+        powerUp = false;
+      }
+    
+  })
+
+
   scores.forEach((whiteDot, counter) => {   
     whiteDot.draw()  
     if (collisionWith(player, whiteDot)) {
@@ -147,6 +180,9 @@ function updateGameArea() {
         eating.play();
         getScore.innerHTML = `Score: ${scoreCounter - 1}`;
       }
+    } else if (collisionWith(player, powerUp)) {
+      scoreCounter++;
+      scores.splice(counter, );
     }
   })
 }

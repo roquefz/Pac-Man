@@ -2,10 +2,11 @@ class Pacman {
   constructor({position, speed}) {
     this.position = position;
     this.speed = speed;
-    this.radius = 9;
+    this.radius = 10;
     this.radians = 0.75;
     this.animationRate = 0.12;
     this.rotation = 0;
+
   }
 
   draw() {
@@ -75,5 +76,28 @@ class Score {
     context.fillStyle = "white";
     context.fill();
     context.closePath(); 
+  }
+}
+
+class Audio {
+  constructor(src) {
+    this.src = src;
+    this.sound = document.createElement("audio");
+  }
+  
+  createElement() {
+    this.sound.src = src;
+    this.sound.setAttribute("preload", "auto");
+    this.sound.setAttribute("controls", "none");
+    this.sound.style.display = "none";
+    document.body.appendChild(this.sound);
+  }
+
+  play() {
+    this.sound.play();
+  }
+
+  stop() {
+    this.sound.pause();
   }
 }

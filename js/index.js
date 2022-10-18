@@ -91,7 +91,6 @@ let prevKey = '';
 function updateGameArea() {
   context.clearRect(0, 0, canvas.clientWidth, canvas.clientHeight);
   player.newPosition();
-  
   playerMovement() 
   const requestID = requestAnimationFrame(updateGameArea);
 
@@ -100,9 +99,10 @@ function updateGameArea() {
     ghost.newPosition();
 
     if (collisionWith(ghost, player)) {
+      death.play();
       cancelAnimationFrame(requestID)
       hp = hp - 1;
-      getHp.innerHTML = `${hp}`;
+      getHp.innerHTML = `HP: ${hp}`;
     }
 
     barriers.forEach((barrier) => { 
@@ -144,14 +144,14 @@ function updateGameArea() {
         getScore.innerHTML = 'You win! Game Over!';
         cancelAnimationFrame(requestID);
       } else {
-        getScore.innerHTML = `${scoreCounter - 1}`;
+        eating.play();
+        getScore.innerHTML = `Score: ${scoreCounter - 1}`;
       }
     }
   })
 }
 
 updateGameArea();
-
 
 // Animate player movement
 function playerMovement() {

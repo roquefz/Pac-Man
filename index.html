@@ -4,15 +4,43 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="./js/audio.js" defer></script>
     <script src="./js/players.js" defer></script>
     <script src="./js/map.js" defer></script>
     <script src="./js/index.js" defer></script>
     <link rel="stylesheet" href="style.css">
-    <title>Document</title>
+    <link rel="shortcut icon" href="./img/favicon.svg" type="image/x-icon">
+    <title>Pac-Man</title>
 </head>
 <body>
-    <canvas width="500" height="500"></canvas>
-    <span id="score">0</span>
-    <span id="hp">3</span>
+    <div>
+        <img src="./img/logo.png" alt="Pac-Man Logo" class="logo">
+    </div>
+    <div class="game-board">
+
+        <div class="bar left">
+            <ul>
+                <li>2 Players</li>
+                <li>3 HP each Player</li>
+                <li>Ghost Player can take damage from other ghosts</li>
+            </ul>
+        </div>
+
+        <div class="display">
+            <canvas id="game" width="500" height="500"></canvas>
+        </div>
+
+        <div class="bar right">
+            <button class="start-btn">Start</button>
+            <audio autoplay>
+                <!-- <source src="audio/backgroundmusic.mp3" type="audio/wav"> -->
+              Your browser does not support the audio element.
+              </audio>
+            <a href="#" class="speaker-btn">
+                <img src="./img/no-volume.webp" alt="Voluke Speaker Button" class="volume">
+            </a>
+            <span id="score">0</span>
+            <span id="hp">HP: 3</span>
+        </div>
 </body>
 </html>

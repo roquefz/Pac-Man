@@ -5,8 +5,9 @@ const volumeButton = document.querySelector('.volume');
 
 
 var starting = new Audio('./audio/pacman_beginning.wav');
-var eating = new Audio("./audio/pacman_eatfruit.wav");
+var eating = new Audio("./audio/pacman_chomp.wav");
 var death = new Audio("./audio/pacman_death.wav");
+var intermission = new Audio("./audio/pacman_intermission.wav");
 
 
 // Music Button Right-Panel 

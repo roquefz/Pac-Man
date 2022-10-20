@@ -115,6 +115,7 @@ function updateGameArea() {
     isPowerUp = false;
   } else {
     isPowerUp = true;
+    intermission.play();
   }
   context.clearRect(0, 0, canvas.clientWidth, canvas.clientHeight);
   player.newPosition();
@@ -213,7 +214,7 @@ function updateGameArea() {
         isPowerUp = true;
         scoreCounter = scoreCounter + 100;
         powerUps.splice(counter, 1);
-        powerUpDuration = 2500;
+        powerUpDuration = 3000;
       }
     });
   });

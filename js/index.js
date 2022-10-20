@@ -82,6 +82,39 @@ const ghosts = [
     },
     color: "#FFB852",
   }),
+  new Ghosts({
+    position: {
+      x: 25 * 5 + 25 / 2,
+      y: 25 * 16 + 25 / 2,
+    },
+    speed: {
+      x: 0,
+      y: -1,
+    },
+    color: "#BB33FF",
+  }),
+  new Ghosts({
+    position: {
+      x: 25 * 16 + 25 / 2,
+      y: 25 * 7 + 25 / 2,
+    },
+    speed: {
+      x: 0,
+      y: -1,
+    },
+    color: "#2121DE",
+  }),
+  new Ghosts({
+    position: {
+      x: 25 * 10 + 25 / 2,
+      y: 25 * 7 + 25 / 2,
+    },
+    speed: {
+      x: -1,
+      y: 0,
+    },
+    color: "#00FF00",
+  }),
 ];
 
 // HP, Score and PowerUp
@@ -109,6 +142,9 @@ const keys = {
 let prevKey = "";
 
 let powerUpDuration = 0;
+let removedGhost;
+const removedGhosts = [];
+
 function updateGameArea() {
   isRunning = true;
   if (powerUpDuration <= 0) {
@@ -122,6 +158,63 @@ function updateGameArea() {
   playerMovement();
   drawScore();
   const requestID = requestAnimationFrame(updateGameArea);
+
+  // if (removedGhosts.length > 0 && powerUpDuration < -100) {
+  //   removedGhosts.forEach((removedGhost) => {
+  //     removedGhost.draw();
+  //     removedGhost.newPosition();
+
+  //     if (
+  //       isPowerUp === false &&
+  //       collisionWith(removedGhost, player)
+  //     ) {
+  //       death.play();
+  //       if (hp > 1) {
+  //         player.position.x = 25 * 10 + 25 / 2;
+  //         player.position.y = 25 * 9 + 25 / 2;
+  //         player.speed.x = 0;
+  //         player.speed.y = 0;
+  //         hp--;
+  //         console.log(hp);
+  //         getHp.innerHTML = `HP: ${hp}`;
+  //       } else {
+  //         getHp.innerHTML = `HP: 0`;
+  //         isRunning = false;
+  //         cancelAnimationFrame(requestID);
+  //       }
+  //     } else if (
+  //       isPowerUp === true &&
+  //       collisionWith(removedGhost, player)
+  //     ) {
+  //       scoreCounter += 220;
+  //     }
+  
+  //     barriers.forEach((barrier) => {
+  //       barrier.draw();
+  //       if (
+  //         (removedGhost.speed.y === 1 || removedGhost.speed.y === -1) &&
+  //         detectCollision({
+  //           barrier: barrier,
+  //           player: removedGhost,
+  //         })
+  //       ) {
+  //         removedGhost.speed.x = 0;
+  //         removedGhost.speed.y *= -1;
+  //       }
+  //       if (
+  //         (removedGhost.speed.x === 1 || removedGhost.speed.x === -1) &&
+  //         detectCollision({
+  //           barrier: barrier,
+  //           player: removedGhost,
+  //         })
+  //       ) {
+  //         removedGhost.speed.x *= -1;
+  //         removedGhost.speed.y = 0;
+  //       }
+  //     });
+
+  //   });
+  // }
 
   ghosts.forEach((ghost) => {
     ghost.draw();
@@ -154,6 +247,7 @@ function updateGameArea() {
     ) {
       scoreCounter += 220;
       const myGhost = ghosts.indexOf(ghost);
+      removedGhosts.push(ghost);
       ghosts.splice(myGhost, 1);
     }
 
@@ -181,6 +275,14 @@ function updateGameArea() {
       }
     });
   });
+
+  // if (ghosts.length < 7) {
+  //   /* removedGhosts.forEach((removedGhost) => {
+  //     ghosts.push(removedGhost);
+  //   }); */
+  //   const reAddGhost = new Ghosts(removedGhost);
+  //   ghosts.push(reAddGhost);
+  // }
 
   // Map boundaries and collisions
   barriers.forEach((barrier) => {
@@ -214,7 +316,7 @@ function updateGameArea() {
         isPowerUp = true;
         scoreCounter = scoreCounter + 100;
         powerUps.splice(counter, 1);
-        powerUpDuration = 3000;
+        powerUpDuration = 3500;
       }
     });
   });
@@ -259,9 +361,9 @@ function detectCollision({ barrier, player }) {
   return (
     player.position.y - player.radius + player.speed.y <=
       barrier.y + barrier.height &&
-      player.position.x + player.radius + player.speed.x >= barrier.x &&
-      player.position.y + player.radius + player.speed.y >= barrier.y &&
-      player.position.x - player.radius + player.speed.x <=
+    player.position.x + player.radius + player.speed.x >= barrier.x &&
+    player.position.y + player.radius + player.speed.y >= barrier.y &&
+    player.position.x - player.radius + player.speed.x <=
       barrier.x + barrier.width
   );
 }

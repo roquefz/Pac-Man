@@ -37,6 +37,45 @@ class Pacman {
   }
 }
 
+class Player2 {
+  constructor({position, speed}) {
+    this.position = position;
+    this.speed = speed;
+    this.radius = 10;
+    this.radians = 0.75;
+    this.animationRate = 0.12;
+    this.rotation = 0;
+
+  }
+
+  draw() {
+    context.save();
+    context.translate(this.position.x, this.position.y);
+    context.rotate(this.rotation)
+    context.translate(-this.position.x, -this.position.y);
+    context.beginPath();
+    context.arc(this.position.x, this.position.y, this.radius, this.radians, Math.PI * 2 - this.radians);
+    context.lineTo(this.position.x, this.position.y);
+    context.fillStyle = "green";
+    context.fill();
+    context.closePath(); 
+    context.restore();
+  }
+
+  newPosition() {
+    this.draw()
+    this.position.x += this.speed.x;
+    this.position.y += this.speed.y;
+
+    // Pacman animation
+/*
+    if(this.radians < 0 || this.radians > 0.75) {
+      this.animationRate = -this.animationRate;
+    }
+    this.radians += this.animationRate;*/
+  }
+}
+
 class Ghosts {
     constructor({
       position,

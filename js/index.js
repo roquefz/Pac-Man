@@ -28,6 +28,16 @@ const player = new Pacman({
   },
 });
 
+const player2 = new Player2( {
+  position: {
+    x: (250 + (25 / 2)),
+    y: (250 + (25 / 2))
+  },
+  speed: {
+    x: 0,
+    y: 0
+  }
+ });
 const ghosts = [
   new Ghosts({
     position: {
@@ -75,10 +85,12 @@ const ghosts = [
   }),
 ];
 
-// HP and Score
+// HP, Score and PowerUp
 
 let scoreCounter = 0;
 let hp = 3;
+let isPowerUp;
+
 
 // Keyboard keys for player movement
 
@@ -103,6 +115,7 @@ function updateGameArea() {
   context.clearRect(0, 0, canvas.clientWidth, canvas.clientHeight);
   player.newPosition();
   playerMovement();
+  drawScore();
   const requestID = requestAnimationFrame(updateGameArea);
 
   ghosts.forEach((ghost) => {
@@ -110,6 +123,7 @@ function updateGameArea() {
     ghost.newPosition();
 
     if (collisionWith(ghost, player)) {
+      powerUp = false;
       death.play();
       if (hp > 1) {
         player.position.x = 25 * 10 + 25 / 2;
@@ -175,10 +189,20 @@ function updateGameArea() {
         cancelAnimationFrame(requestID);
       } else {
         eating.play();
-        getScore.innerHTML = `Score: ${scoreCounter}`;
       }
     }
+    powerUps.forEach((powerUp, counter) => {
+      powerUp.draw();
+      if (collisionWith(player, powerUp)) {
+        scoreCounter = scoreCounter + 100;
+        powerUps.splice(counter, 1);
+      }
+    })
   });
+}
+
+function drawScore() {
+  getScore.innerHTML = `Score: ${scoreCounter}`;
 }
 
 // Animate player movement
@@ -216,9 +240,9 @@ function detectCollision({ barrier, player }) {
   return (
     player.position.y - player.radius + player.speed.y <=
       barrier.y + barrier.height &&
-    player.position.x + player.radius + player.speed.x >= barrier.x &&
-    player.position.y + player.radius + player.speed.y >= barrier.y &&
-    player.position.x - player.radius + player.speed.x <=
+      player.position.x + player.radius + player.speed.x >= barrier.x &&
+      player.position.y + player.radius + player.speed.y >= barrier.y &&
+      player.position.x - player.radius + player.speed.x <=
       barrier.x + barrier.width
   );
 }

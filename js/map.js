@@ -203,10 +203,9 @@ class Borders {
     console.log(randomZero);
     fullMap[randomZero.x][randomZero.y] = 22;
   };
-  generatePowerUp();
-  generatePowerUp();
-  generatePowerUp();
-  generatePowerUp();
-  generatePowerUp();
-  
+
+ for(numberOfPowerUps = 0; numberOfPowerUps < 5; numberOfPowerUps++) {
+    generatePowerUp();
+ }
+
   createMap();

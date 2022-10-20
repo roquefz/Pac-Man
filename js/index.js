@@ -14,7 +14,7 @@ window.onload = () => {
   });
 };
 
-// Player and ghost
+// Player and ghosts
 
 const player = new Pacman({
   position: {
@@ -37,6 +37,7 @@ const player2 = new Player2({
     y: 0,
   },
 });
+
 const ghosts = [
   new Ghosts({
     position: {
@@ -123,23 +124,6 @@ let scoreCounter = 0;
 let hp = 3;
 let isPowerUp = false;
 
-// Keyboard keys for player movement
-
-const keys = {
-  ArrowUp: {
-    pressed: false,
-  },
-  ArrowDown: {
-    pressed: false,
-  },
-  ArrowLeft: {
-    pressed: false,
-  },
-  ArrowRight: {
-    pressed: false,
-  },
-};
-let prevKey = "";
 
 let powerUpDuration = 0;
 let removedGhost;
@@ -159,62 +143,61 @@ function updateGameArea() {
   drawScore();
   const requestID = requestAnimationFrame(updateGameArea);
 
-  // if (removedGhosts.length > 0 && powerUpDuration < -100) {
-  //   removedGhosts.forEach((removedGhost) => {
-  //     removedGhost.draw();
-  //     removedGhost.newPosition();
+  if (removedGhosts.length > 0 && powerUpDuration < 0) {
+    removedGhosts.forEach((removedGhost) => {
+      removedGhost.draw();
+      removedGhost.newPosition();
 
-  //     if (
-  //       isPowerUp === false &&
-  //       collisionWith(removedGhost, player)
-  //     ) {
-  //       death.play();
-  //       if (hp > 1) {
-  //         player.position.x = 25 * 10 + 25 / 2;
-  //         player.position.y = 25 * 9 + 25 / 2;
-  //         player.speed.x = 0;
-  //         player.speed.y = 0;
-  //         hp--;
-  //         console.log(hp);
-  //         getHp.innerHTML = `HP: ${hp}`;
-  //       } else {
-  //         getHp.innerHTML = `HP: 0`;
-  //         isRunning = false;
-  //         cancelAnimationFrame(requestID);
-  //       }
-  //     } else if (
-  //       isPowerUp === true &&
-  //       collisionWith(removedGhost, player)
-  //     ) {
-  //       scoreCounter += 220;
-  //     }
+      if (
+        isPowerUp === false &&
+        collisionWith(removedGhost, player)
+      ) {
+        death.play();
+        if (hp > 1) {
+          player.position.x = 25 * 10 + 25 / 2;
+          player.position.y = 25 * 9 + 25 / 2;
+          player.speed.x = 0;
+          player.speed.y = 0;
+          hp--;
+          console.log(hp);
+          getHp.innerHTML = `HP: ${hp}`;
+        } else {
+          getHp.innerHTML = `HP: 0`;
+          isRunning = false;
+          cancelAnimationFrame(requestID);
+        }
+      } else if (
+        isPowerUp === true &&
+        collisionWith(removedGhost, player)
+      ) {
+        scoreCounter += 220;
+      }
   
-  //     barriers.forEach((barrier) => {
-  //       barrier.draw();
-  //       if (
-  //         (removedGhost.speed.y === 1 || removedGhost.speed.y === -1) &&
-  //         detectCollision({
-  //           barrier: barrier,
-  //           player: removedGhost,
-  //         })
-  //       ) {
-  //         removedGhost.speed.x = 0;
-  //         removedGhost.speed.y *= -1;
-  //       }
-  //       if (
-  //         (removedGhost.speed.x === 1 || removedGhost.speed.x === -1) &&
-  //         detectCollision({
-  //           barrier: barrier,
-  //           player: removedGhost,
-  //         })
-  //       ) {
-  //         removedGhost.speed.x *= -1;
-  //         removedGhost.speed.y = 0;
-  //       }
-  //     });
+      barriers.forEach((barrier) => {
+        if (
+          (removedGhost.speed.y === 1 || removedGhost.speed.y === -1) &&
+          detectCollision({
+            barrier: barrier,
+            player: removedGhost,
+          })
+        ) {
+          removedGhost.speed.x = 0;
+          removedGhost.speed.y *= -1;
+        }
+        if (
+          (removedGhost.speed.x === 1 || removedGhost.speed.x === -1) &&
+          detectCollision({
+            barrier: barrier,
+            player: removedGhost,
+          })
+        ) {
+          removedGhost.speed.x *= -1;
+          removedGhost.speed.y = 0;
+        }
+      });
 
-  //   });
-  // }
+    });
+  }
 
   ghosts.forEach((ghost) => {
     ghost.draw();
@@ -252,7 +235,6 @@ function updateGameArea() {
     }
 
     barriers.forEach((barrier) => {
-      barrier.draw();
       if (
         (ghost.speed.y === 1 || ghost.speed.y === -1) &&
         detectCollision({
@@ -277,9 +259,6 @@ function updateGameArea() {
   });
 
   // if (ghosts.length < 7) {
-  //   /* removedGhosts.forEach((removedGhost) => {
-  //     ghosts.push(removedGhost);
-  //   }); */
   //   const reAddGhost = new Ghosts(removedGhost);
   //   ghosts.push(reAddGhost);
   // }
@@ -326,22 +305,6 @@ function drawScore() {
   getScore.innerHTML = `Score: ${scoreCounter}`;
 }
 
-// Animate player movement
-function playerMovement() {
-  if (keys.ArrowUp.pressed && prevKey === "ArrowUp") {
-    player.rotation = 1.5 * Math.PI;
-    player.speed.y = -1;
-  } else if (keys.ArrowDown.pressed && prevKey === "ArrowDown") {
-    player.rotation = Math.PI / 2;
-    player.speed.y = 1;
-  } else if (keys.ArrowLeft.pressed && prevKey === "ArrowLeft") {
-    player.rotation = Math.PI;
-    player.speed.x = -1;
-  } else if (keys.ArrowRight.pressed && prevKey === "ArrowRight") {
-    player.rotation = 0;
-    player.speed.x = 1;
-  }
-}
 
 // Check if two circles are colliding
 function collisionWith(firstCircle, secondCircle) {
@@ -361,11 +324,48 @@ function detectCollision({ barrier, player }) {
   return (
     player.position.y - player.radius + player.speed.y <=
       barrier.y + barrier.height &&
-    player.position.x + player.radius + player.speed.x >= barrier.x &&
-    player.position.y + player.radius + player.speed.y >= barrier.y &&
-    player.position.x - player.radius + player.speed.x <=
+      player.position.x + player.radius + player.speed.x >= barrier.x &&
+      player.position.y + player.radius + player.speed.y >= barrier.y &&
+      player.position.x - player.radius + player.speed.x <=
       barrier.x + barrier.width
   );
+}
+
+
+// Animate player movement
+
+// Keyboard keys for player movement
+
+const keys = {
+  ArrowUp: {
+    pressed: false,
+  },
+  ArrowDown: {
+    pressed: false,
+  },
+  ArrowLeft: {
+    pressed: false,
+  },
+  ArrowRight: {
+    pressed: false,
+  },
+};
+let prevKey = "";
+
+function playerMovement() {
+  if (keys.ArrowUp.pressed && prevKey === "ArrowUp") {
+    player.rotation = 1.5 * Math.PI;
+    player.speed.y = -1;
+  } else if (keys.ArrowDown.pressed && prevKey === "ArrowDown") {
+    player.rotation = Math.PI / 2;
+    player.speed.y = 1;
+  } else if (keys.ArrowLeft.pressed && prevKey === "ArrowLeft") {
+    player.rotation = Math.PI;
+    player.speed.x = -1;
+  } else if (keys.ArrowRight.pressed && prevKey === "ArrowRight") {
+    player.rotation = 0;
+    player.speed.x = 1;
+  }
 }
 
 // Event Listeners for player movement
@@ -395,15 +395,19 @@ document.addEventListener("keyup", (event) => {
   switch (event.key) {
     case "ArrowUp":
       keys.ArrowUp.pressed = false;
+      player.speed.y = 0;
       break;
     case "ArrowDown":
       keys.ArrowDown.pressed = false;
+      player.speed.y = 0;
       break;
     case "ArrowLeft":
       keys.ArrowLeft.pressed = false;
+      player.speed.x = 0;
       break;
     case "ArrowRight":
       keys.ArrowRight.pressed = false;
+      player.speed.x = 0;
       break;
   }
 });

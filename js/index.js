@@ -8,7 +8,6 @@ const startBtn = document.getElementById("start-btn");
 let isRunning;
 window.onload = () => {
   startBtn.addEventListener("click", () => {
-    console.log("hi");
     if (!isRunning) {
       updateGameArea();
     }
@@ -28,16 +27,16 @@ const player = new Pacman({
   },
 });
 
-const player2 = new Player2( {
+const player2 = new Player2({
   position: {
-    x: (250 + (25 / 2)),
-    y: (250 + (25 / 2))
+    x: 250 + 25 / 2,
+    y: 250 + 25 / 2,
   },
   speed: {
     x: 0,
-    y: 0
-  }
- });
+    y: 0,
+  },
+});
 const ghosts = [
   new Ghosts({
     position: {
@@ -89,8 +88,7 @@ const ghosts = [
 
 let scoreCounter = 0;
 let hp = 3;
-let isPowerUp;
-
+let isPowerUp = false;
 
 // Keyboard keys for player movement
 
@@ -110,8 +108,14 @@ const keys = {
 };
 let prevKey = "";
 
+let powerUpDuration = 0;
 function updateGameArea() {
   isRunning = true;
+  if (powerUpDuration <= 0) {
+    isPowerUp = false;
+  } else {
+    isPowerUp = true;
+  }
   context.clearRect(0, 0, canvas.clientWidth, canvas.clientHeight);
   player.newPosition();
   playerMovement();
@@ -121,9 +125,13 @@ function updateGameArea() {
   ghosts.forEach((ghost) => {
     ghost.draw();
     ghost.newPosition();
+    powerUpDuration--;
 
-    if (collisionWith(ghost, player)) {
-      powerUp = false;
+    if (
+      isPowerUp === false &&
+      collisionWith(ghost, player) &&
+      powerUpDuration <= 0
+    ) {
       death.play();
       if (hp > 1) {
         player.position.x = 25 * 10 + 25 / 2;
@@ -138,6 +146,14 @@ function updateGameArea() {
         isRunning = false;
         cancelAnimationFrame(requestID);
       }
+    } else if (
+      isPowerUp === true &&
+      collisionWith(ghost, player) &&
+      powerUpDuration > 0
+    ) {
+      scoreCounter += 220;
+      const myGhost = ghosts.indexOf(ghost);
+      ghosts.splice(myGhost, 1);
     }
 
     barriers.forEach((barrier) => {
@@ -194,10 +210,12 @@ function updateGameArea() {
     powerUps.forEach((powerUp, counter) => {
       powerUp.draw();
       if (collisionWith(player, powerUp)) {
+        isPowerUp = true;
         scoreCounter = scoreCounter + 100;
         powerUps.splice(counter, 1);
+        powerUpDuration = 2500;
       }
-    })
+    });
   });
 }
 

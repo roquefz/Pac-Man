@@ -3,16 +3,28 @@ const context = canvas.getContext("2d");
 const getScore = document.getElementById("score");
 const getHp = document.getElementById("hp");
 const startBtn = document.getElementById("start-btn");
+const restartBtn = document.getElementById("restart-btn");
 
 // Load game
 let isRunning;
+let gameOver = false;
+
+
 window.onload = () => {
   startBtn.addEventListener("click", () => {
     if (!isRunning) {
       updateGameArea();
     }
-  });
+    });
 };
+
+restartBtn.addEventListener("click", () => {
+  window.alert(`The entire Page will be reloaded. Please click on "Start" again
+
+  "It is not a bug is a feature".
+  `)
+  window.location.reload();
+});
 
 // Player and ghosts
 
@@ -124,7 +136,6 @@ let scoreCounter = 0;
 let hp = 3;
 let isPowerUp = false;
 
-
 let powerUpDuration = 0;
 let removedGhost;
 const removedGhosts = [];
@@ -141,6 +152,7 @@ function updateGameArea() {
   player.newPosition();
   playerMovement();
   drawScore();
+  drawHp();
   const requestID = requestAnimationFrame(updateGameArea);
 
   ghosts.forEach((ghost) => {
@@ -149,11 +161,11 @@ function updateGameArea() {
     powerUpDuration--;
 
     removedGhosts.forEach((object) => {
-      if(object.removed === true && powerUpDuration < -300) {
+      if (object.removed === true && powerUpDuration < -300) {
         object.removed = false;
         ghosts.push(object);
       }
-    })
+    });
 
     if (
       isPowerUp === false &&
@@ -172,7 +184,12 @@ function updateGameArea() {
       } else {
         getHp.innerHTML = `HP: 0`;
         isRunning = false;
+        gameOver = true;
+        context.clearRect(0, 0, canvas.clientWidth, canvas.clientHeight);
+
         cancelAnimationFrame(requestID);
+        restartBtn.removeAttribute("hidden");
+        window.alert("You Lost!")
       }
     } else if (
       isPowerUp === true &&
@@ -211,7 +228,7 @@ function updateGameArea() {
   });
 
   // Map boundaries and collisions
-  
+
   barriers.forEach((barrier) => {
     barrier.draw();
     if (
@@ -231,7 +248,9 @@ function updateGameArea() {
       scores.splice(counter, 1);
       if (scores.length === 0) {
         isRunning = false;
+        window.alert("You won the game! Congratulations!")
         getScore.innerHTML = "You win! Game Over!";
+        context.clearRect(0, 0, canvas.clientWidth, canvas.clientHeight);
         cancelAnimationFrame(requestID);
       } else {
         eating.play();
@@ -243,7 +262,11 @@ function updateGameArea() {
         isPowerUp = true;
         scoreCounter = scoreCounter + 100;
         powerUps.splice(counter, 1);
-        powerUpDuration = 3500;
+        if(powerUpDuration >= 3500) {
+          powerUpDuration = 3500;
+        } else {
+          powerUpDuration = 3500;
+        }
       }
     });
   });
@@ -253,6 +276,9 @@ function drawScore() {
   getScore.innerHTML = `Score: ${scoreCounter}`;
 }
 
+function drawHp() {
+  getHp.innerHTML = `HP: ${hp}`;
+}
 
 // Check if two circles are colliding
 function collisionWith(firstCircle, secondCircle) {
@@ -278,7 +304,6 @@ function detectCollision({ barrier, player }) {
       barrier.x + barrier.width
   );
 }
-
 
 // Animate player movement
 

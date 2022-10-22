@@ -49,17 +49,15 @@ body {
 
 
 .left {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
     box-shadow: -20px 10px 20px 1px purple;
+
 }
 
-.left > ul {
-    padding: 20%;
-}
 
-.left > ul > li {
-    margin-bottom: 15px;
-    letter-spacing: 3px;
-}
 
 .right {
     display: flex;
@@ -74,12 +72,10 @@ body {
     height: 50px;
 }
 
-.display {
+canvas {
     background-color: black;
-    margin-top: 10%;
+    margin-top: 30%;
     margin-bottom: 10%;
-    border: 3px solid slateblue;
-    border-radius: 3%;
 }
 
 #start-btn {
@@ -94,9 +90,19 @@ body {
     color: white;
     padding: 2%;
     margin-top: 5%;
+    margin-left: 5%;
 }
 
 #hp {
     color: white;
-    margin-top: 5%;
+    margin-top: 40%;
+    margin-left: 5%;
+}
+
+#restart-btn {
+    font-family: 'Press Start 2P', cursive;
+    width: 100px;
+    height: 50px;
+    margin: 20%;
+    text-transform: uppercase;
 }

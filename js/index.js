@@ -14,6 +14,7 @@ window.onload = () => {
   startBtn.addEventListener("click", () => {
     if (!isRunning) {
       updateGameArea();
+      starting.play();
     }
     });
 };

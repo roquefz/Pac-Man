@@ -258,12 +258,8 @@ function updateGameArea() {
     });
   });
 
-  // if (ghosts.length < 7) {
-  //   const reAddGhost = new Ghosts(removedGhost);
-  //   ghosts.push(reAddGhost);
-  // }
-
   // Map boundaries and collisions
+  
   barriers.forEach((barrier) => {
     barrier.draw();
     if (

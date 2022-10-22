@@ -2,7 +2,7 @@ class Pacman {
   constructor({position, speed}) {
     this.position = position;
     this.speed = speed;
-    this.radius = 10;
+    this.radius = 9.2;
     this.radians = 0.75;
     this.animationRate = 0.12;
     this.rotation = 0;

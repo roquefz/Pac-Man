@@ -143,66 +143,17 @@ function updateGameArea() {
   drawScore();
   const requestID = requestAnimationFrame(updateGameArea);
 
-  if (removedGhosts.length > 0 && powerUpDuration < 0) {
-    removedGhosts.forEach((removedGhost) => {
-      removedGhost.draw();
-      removedGhost.newPosition();
-
-      if (
-        isPowerUp === false &&
-        collisionWith(removedGhost, player)
-      ) {
-        death.play();
-        if (hp > 1) {
-          player.position.x = 25 * 10 + 25 / 2;
-          player.position.y = 25 * 9 + 25 / 2;
-          player.speed.x = 0;
-          player.speed.y = 0;
-          hp--;
-          console.log(hp);
-          getHp.innerHTML = `HP: ${hp}`;
-        } else {
-          getHp.innerHTML = `HP: 0`;
-          isRunning = false;
-          cancelAnimationFrame(requestID);
-        }
-      } else if (
-        isPowerUp === true &&
-        collisionWith(removedGhost, player)
-      ) {
-        scoreCounter += 220;
-      }
-  
-      barriers.forEach((barrier) => {
-        if (
-          (removedGhost.speed.y === 1 || removedGhost.speed.y === -1) &&
-          detectCollision({
-            barrier: barrier,
-            player: removedGhost,
-          })
-        ) {
-          removedGhost.speed.x = 0;
-          removedGhost.speed.y *= -1;
-        }
-        if (
-          (removedGhost.speed.x === 1 || removedGhost.speed.x === -1) &&
-          detectCollision({
-            barrier: barrier,
-            player: removedGhost,
-          })
-        ) {
-          removedGhost.speed.x *= -1;
-          removedGhost.speed.y = 0;
-        }
-      });
-
-    });
-  }
-
   ghosts.forEach((ghost) => {
     ghost.draw();
     ghost.newPosition();
     powerUpDuration--;
+
+    removedGhosts.forEach((object) => {
+      if(object.removed === true && powerUpDuration < -300) {
+        object.removed = false;
+        ghosts.push(object);
+      }
+    })
 
     if (
       isPowerUp === false &&
@@ -228,6 +179,7 @@ function updateGameArea() {
       collisionWith(ghost, player) &&
       powerUpDuration > 0
     ) {
+      ghost.removed = true;
       scoreCounter += 220;
       const myGhost = ghosts.indexOf(ghost);
       removedGhosts.push(ghost);

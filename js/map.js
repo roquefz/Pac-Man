@@ -193,14 +193,12 @@ class Borders {
         }
       }
     }
-    console.log("array with zeros", arrayWithZerosIndexes);
   
     let randomZero =
       arrayWithZerosIndexes[
         Math.floor(Math.random() * arrayWithZerosIndexes.length)
       ];
   
-    console.log(randomZero);
     fullMap[randomZero.x][randomZero.y] = 22;
   };
 

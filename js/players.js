@@ -87,6 +87,7 @@ class Ghosts {
       this.speed = speed;
       this.radius = 9;
       this.color = color;
+      this.removed = false;
     }
 
     draw() {

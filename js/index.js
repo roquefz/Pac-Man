@@ -20,10 +20,6 @@ window.onload = () => {
 };
 
 restartBtn.addEventListener("click", () => {
-  window.alert(`The entire Page will be reloaded. Please click on "Start" again
-
-  "It is not a bug is a feature".
-  `)
   window.location.reload();
 });
 
